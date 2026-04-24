@@ -7,14 +7,14 @@
 
 ## What this project covers (mapped to the JD)
 
-| JD Requirement | What you'll build |
-|---|---|
-| Deploy, monitor, maintain AI models | Fine-tune DistilBERT, serve via FastAPI, add Prometheus metrics |
+| JD Requirement                                           | What you'll build                                                      |
+| -------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Deploy, monitor, maintain AI models                      | Fine-tune DistilBERT, serve via FastAPI, add Prometheus metrics        |
 | Integrate LLMs + foundation models in research workflows | LangChain agent with tools (classifier, PubMed search, LLM summarizer) |
-| AI agent architectures (LangChain/Haystack) | ReAct agent that reasons about which tool to use |
-| Container technologies (Docker, Helm, Kubernetes) | Dockerized service with docker-compose and health checks |
-| Training, evaluating deep neural networks | Full train → evaluate → save pipeline with metrics |
-| Python + version control | Everything in Python, Git-tracked |
+| AI agent architectures (LangChain/Haystack)              | ReAct agent that reasons about which tool to use                       |
+| Container technologies (Docker, Helm, Kubernetes)        | Dockerized service with docker-compose and health checks               |
+| Training, evaluating deep neural networks                | Full train → evaluate → save pipeline with metrics                     |
+| Python + version control                                 | Everything in Python, Git-tracked                                      |
 
 ---
 
@@ -85,7 +85,7 @@ BATCH_SIZE = 32
 
 # --- Load dataset ---
 print("Loading PubMed RCT dataset...")
-dataset = load_dataset("qanastek/pubmed-rct20k")
+dataset = load_dataset("armanc/pubmed-rct20k")
 
 # Explore the data — understand what you're working with
 print(f"Train size: {len(dataset['train'])}")
@@ -158,6 +158,7 @@ print(f"Model saved to {OUTPUT_DIR}/best_model")
 ```
 
 **Run it:**
+
 ```bash
 python train/train_classifier.py
 ```
@@ -165,6 +166,7 @@ python train/train_classifier.py
 Watch the loss decrease and F1 increase each epoch. On M4 with MPS, this should take ~30-45 minutes.
 
 **What to understand:**
+
 - `tokenizer` converts text → numbers (token IDs). Each word gets split into subwords from BERT's vocabulary.
 - `AutoModelForSequenceClassification` adds a classification head on top of DistilBERT.
 - `compute_metrics` calculates accuracy AND F1 — F1 matters more because classes may be imbalanced.
@@ -248,11 +250,13 @@ for i in range(min(5, len(predictions))):
 ```
 
 **Run it:**
+
 ```bash
 python evaluate/evaluate_model.py
 ```
 
 **What to tell Arnold:**
+
 - "I evaluated per-class F1 because accuracy alone hides class imbalance."
 - "I also did error analysis — the model confuses BACKGROUND and METHODS most often because they share similar language."
 - "The confusion matrix shows exactly where the model needs more data or augmentation."
@@ -458,6 +462,7 @@ if __name__ == "__main__":
 ```
 
 **To run this, first install Ollama** (runs a local LLM on your M4 — no API key needed):
+
 ```bash
 brew install ollama
 ollama pull llama3.2:3b    # Small model, runs fast on M4
@@ -597,11 +602,13 @@ def model_info():
 ```
 
 **Run it:**
+
 ```bash
 uvicorn api.main:app --reload --port 8000
 ```
 
 **Test it:**
+
 ```bash
 # Health check (Kubernetes would hit this)
 curl http://localhost:8000/health
@@ -705,6 +712,7 @@ requests
 ```
 
 **Run the full stack:**
+
 ```bash
 docker-compose up --build
 ```
